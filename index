@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L'Algeria - Menu Digital</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8B0000;
+      --primary-dark: #6d0000;
+      --secondary: #FFD700;
+      --bg: #FFF5EE;
+      --light: #fff;
+      --dark: #333;
+      --gray: #777;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    [dir="rtl"] body {
+      font-family: 'Arial Arabic', 'Segoe UI', sans-serif;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    
+    /* Header */
+    .lang-buttons {
+      text-align: center;
+      padding: 20px 0;
+      background: var(--primary);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .lang-btn {
+      margin: 0 5px;
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--light);
+      border: 2px solid var(--secondary);
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+      min-width: 120px;
+    }
+    
+    .lang-btn:hover {
+      background: var(--secondary);
+      color: var(--primary);
+      transform: scale(1.05);
+    }
+    
+    header {
+      text-align: center;
+      margin: 20px;
+      padding: 25px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--light);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    header h1 {
+      font-size: 2.2rem;
+      margin: 0;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    
+    /* Navigation */
+    .top-nav {
+      display: flex;
+      justify-content: center;
+      padding: 15px 20px;
+      background: var(--light);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .nav-btn {
+      padding: 10px 20px;
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      min-width: 150px;
+      justify-content: center;
+    }
+    
+    .nav-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .nav-btn i {
+      font-size: 1.1rem;
+    }
+    
+    /* Categories */
+    #categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .category-btn {
+      flex: 1 1 180px;
+      max-width: 200px;
+      padding: 15px;
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    
+    .category-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .return-btn {
+      background: var(--secondary);
+      color: var(--dark);
+    }
+    
+    /* Items grid */
+    .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 20px 40px;
+    }
+    
+    .item-card {
+      background: var(--light);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .item-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .item-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+    }
+    
+    .item-info {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .item-info h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      color: var(--primary);
+      min-height: 50px;
+    }
+    
+    .item-info .price {
+      font-weight: bold;
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin: 10px 0;
+    }
+    
+    .item-desc {
+      color: var(--gray);
+      font-size: 0.95rem;
+      flex-grow: 1;
+      margin-bottom: 15px;
+    }
+    
+    /* Admin Panel */
+    .admin-panel {
+      display: none;
+      background: var(--light);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .admin-title {
+      color: var(--primary);
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+    
+    .admin-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      grid-column: span 2;
+      justify-content: center;
+    }
+    
+    .submit-btn {
+      padding: 12px 25px;
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .admin-list {
+      margin-top: 30px;
+    }
+    
+    .admin-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .admin-item-info h4 {
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+    
+    .admin-item-price {
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .admin-item-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .delete-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      background: var(--success);
+      color: white;
+      border-radius: 5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transform: translateX(120%);
+      transition: transform 0.3s ease-out;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.error {
+      background: var(--danger);
+    }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+    
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-form {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+      
+      .form-buttons {
+        grid-column: span 1;
+      }
+      
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .items-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .admin-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .admin-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      
+      .top-nav {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .nav-btn {
+        min-width: 120px;
+      }
+      
+      .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        transform: translateY(-100px);
+      }
+      
+      .notification.show {
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-buttons">
+    <button class="lang-btn" onclick="selectLanguage('ar')">العربية</button>
+    <button class="lang-btn" onclick="selectLanguage('fr')">Français</button>
+    <button class="lang-btn" onclick="selectLanguage('en')">English</button>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <div id="main" style="display:none;">
+    <div class="container">
+      <header>
+        <h1 id="welcome">L'Algeria Restaurant ⚜️Tizi Ouzou⚜️</h1>
+      </header>
+      
+      <div class="top-nav">
+        <button class="nav-btn" onclick="showAdminPanel()">
+          <i class="fas fa-lock"></i>
+          <span id="admin-text">Admin</span>
+        </button>
+      </div>
+      
+      <!-- Loading indicator -->
+      <div id="loading" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p id="loading-text">Chargement en cours...</p>
+      </div>
+      
+      <!-- Admin panel -->
+      <div id="admin-panel" class="admin-panel">
+        <h2 class="admin-title" id="admin-title">Administration</h2>
+        
+        <button class="nav-btn return-btn" onclick="returnToMenu()" style="margin-bottom: 20px;">
+          <i class="fas fa-arrow-left"></i>
+          <span id="return-menu-text">Retour au menu</span>
+        </button>
+        
+        <form id="admin-form" class="admin-form">
+          <div class="form-group">
+            <label for="item-category" id="category-label">Catégorie</label>
+            <select id="item-category" required>
+              <option value="entrees">Entrées</option>
+              <option value="plats">Plats principaux</option>
+              <option value="pates">Pâtes</option>
+              <option value="plats_du_jour">Plats du jour</option>
+              <option value="boissons_fraiches">Boissons fraîches</option>
+              <option value="boissons_chaudes">Boissons chaudes</option>
+              <option value="desserts">Desserts</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="item-name-fr" id="name-fr-label">Nom (FR)</label>
+            <input type="text" id="item-name-fr" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="item-name-ar" id="name-ar-label">Nom (AR)</label>
+            <input type="text" id="item-name-ar" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="item-name-en" id="name-en-label">Nom (EN)</label>
+            <input type="text" id="item-name-en" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="item-price" id="price-label">Prix (DA)</label>
+            <input type="number" id="item-price" min="0" required>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="item-desc-fr" id="desc-fr-label">Description (FR)</label>
+            <textarea id="item-desc-fr" required></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="item-desc-ar" id="desc-ar-label">Description (AR)</label>
+            <textarea id="item-desc-ar" required></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="item-desc-en" id="desc-en-label">Description (EN)</label>
+            <textarea id="item-desc-en" required></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label id="image-label">Image</label>
+            <input type="file" id="item-image" accept="image/*">
+          </div>
+          
+          <div class="form-buttons">
+            <button type="button" class="submit-btn" onclick="addMenuItem()" id="add-item-btn">Ajouter Plat</button>
+            <button type="reset" class="submit-btn" style="background: #95a5a6;">Réinitialiser</button>
+          </div>
+        </form>
+        
+        <div class="admin-list" id="admin-list">
+          <h3 id="items-list-title">Liste des Plats</h3>
+          <div id="menu-items-list"></div>
+        </div>
+      </div>
+      
+      <!-- Menu section -->
+      <div id="menu-section" style="display:none;">
+        <div id="categories"></div>
+        <div id="items-container" class="items-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase App -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <!-- Firebase Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <!-- Firebase Storage -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+  <script>
+    // ====================================================
+    // CONFIGURATION FIREBASE - À REMPLACER PAR VOS INFOS
+    // ====================================================
+    const firebaseConfig = {
+  apiKey: "AIzaSyB7L3pACEYiHgNZyA6RggAKbTXS1wniTbw",
+  authDomain: "algeria-a93d2.firebaseapp.com",
+  projectId: "algeria-a93d2",
+  storageBucket: "algeria-a93d2.appspot.com",
+  messagingSenderId: "1063644202593",
+  appId: "1:1063644202593:web:ef3757c6151d05a1cccc20"
+};
+
+    
+    // ====================================================
+    // INITIALISATION DE L'APPLICATION
+    // ====================================================
+    let lang = 'fr';
+    const adminPassword = "ghsprod15";
+    let currentCategoryId = null;
+    
+    // Initialisation Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    
+    // Données du menu
+    let menuData = {
+      welcome: {
+        ar: "مرحبا بكم في مطعم الجيريا",
+        fr: "Bienvenue au restaurant L’Algeria ⚜️Tizi Ouzou⚜️",
+        en: "Welcome to L’Algeria Restaurant ⚜️Tizi Ouzou⚜️"
+      },
+      categories: []
+    };
+    
+    // Fonction pour charger les données depuis Firebase
+    async function loadMenuData() {
+      showLoading(true);
+      try {
+        // Réinitialiser les catégories
+        menuData.categories = [];
+        
+        // Charger les catégories
+        const categoriesSnapshot = await db.collection("categories").get();
+        
+        // Pour chaque catégorie, charger les items
+        for (const catDoc of categoriesSnapshot.docs) {
+          const categoryData = catDoc.data();
+          const items = [];
+          
+          // Charger les items de cette catégorie
+          const itemsSnapshot = await catDoc.ref.collection("items").get();
+          itemsSnapshot.forEach(itemDoc => {
+            items.push({
+              id: itemDoc.id,
+              ...itemDoc.data()
+            });
+          });
+          
+          // Ajouter la catégorie avec ses items
+          menuData.categories.push({
+            id: catDoc.id,
+            name: categoryData.name,
+            items: items
+          });
+        }
+        
+        // Mettre à jour le titre de bienvenue
+        document.getElementById('welcome').textContent = menuData.welcome[lang];
+        
+        // Afficher le menu
+        document.getElementById('menu-section').style.display = 'block';
+        renderCategories();
+        
+        // Masquer le chargement
+        showLoading(false);
+        
+      } catch (error) {
+        console.error("Erreur de chargement des données: ", error);
+        showLoading(false);
+        showNotification("Erreur de chargement des données. Veuillez réessayer.", true);
+      }
+    }
+    
+    // Afficher/masquer le chargement
+    function showLoading(show) {
+      document.getElementById('loading').style.display = show ? 'block' : 'none';
+      document.getElementById('menu-section').style.display = show ? 'none' : 'block';
+    }
+    
+    // Afficher une notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = isError ? 'notification error show' : 'notification show';
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Initialiser Firebase et charger les données
+    window.onload = function() {
+      document.getElementById('main').style.display = 'block';
+      updateTextElements();
+      loadMenuData();
+    };
+    
+    // ====================================================
+    // FONCTIONS PRINCIPALES
+    // ====================================================
+    
+    // Sélection de la langue
+    function selectLanguage(l) {
+      lang = l;
+      document.body.dir = (l === 'ar') ? 'rtl' : 'ltr';
+      document.querySelector('.lang-buttons').style.display = 'none';
+      document.getElementById('welcome').textContent = menuData.welcome[lang];
+      updateTextElements();
+      
+      // Recharger le menu avec la nouvelle langue
+      if (document.getElementById('menu-section').style.display !== 'none') {
+        renderCategories();
+        
+        // Si une catégorie est déjà sélectionnée, recharger ses items
+        if (currentCategoryId) {
+          showItems(currentCategoryId);
+        }
+      }
+    }
+    
+    // Retour au menu principal
+    function returnToMenu() {
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('menu-section').style.display = 'block';
+      renderCategories();
+    }
+    
+    // Afficher les catégories
+    function renderCategories() {
+      const categoriesContainer = document.getElementById('categories');
+      categoriesContainer.innerHTML = '';
+      
+      // Boutons de catégories
+      menuData.categories.forEach(category => {
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        button.textContent = category.name[lang];
+        button.onclick = () => {
+          currentCategoryId = category.id;
+          showItems(category.id);
+        };
+        categoriesContainer.appendChild(button);
+      });
+      
+      // Vider le conteneur des articles
+      document.getElementById('items-container').innerHTML = '';
+    }
+    
+    // Afficher les articles d'une catégorie
+    function showItems(catId) {
+      const category = menuData.categories.find(c => c.id === catId);
+      if (!category) return;
+      
+      const itemsContainer = document.getElementById('items-container');
+      itemsContainer.innerHTML = '';
+      
+      category.items.forEach((item) => {
+        const itemCard = document.createElement('div');
+        itemCard.className = 'item-card';
+        itemCard.innerHTML = `
+          <img class="item-img" src="${item.imgUrl || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'}" alt="${item.name[lang]}">
+          <div class="item-info">
+            <h3>${item.name[lang]}</h3>
+            <p class="item-desc">${item.desc[lang]}</p>
+            <div class="price">${item.price} DA</div>
+          </div>
+        `;
+        itemsContainer.appendChild(itemCard);
+      });
+    }
+    
+    // Afficher le panneau d'administration
+    function showAdminPanel() {
+      const enteredPassword = prompt((lang === 'ar') ? 'الرجاء إدخال كلمة المرور:' : 
+                                    (lang === 'fr') ? 'Veuillez entrer le mot de passe:' : 'Please enter the password:');
+      
+      if (enteredPassword !== adminPassword) {
+        showNotification((lang === 'ar') ? 'كلمة المرور غير صحيحة!' : 
+              (lang === 'fr') ? 'Mot de passe incorrect!' : 'Incorrect password!', true);
+        return;
+      }
+      
+      document.getElementById('menu-section').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      renderAdminItemsList();
+    }
+    
+    // Afficher la liste des plats en admin
+    function renderAdminItemsList() {
+      const itemsList = document.getElementById('menu-items-list');
+      itemsList.innerHTML = '';
+      
+      menuData.categories.forEach(category => {
+        category.items.forEach((item) => {
+          const itemElement = document.createElement('div');
+          itemElement.className = 'admin-item';
+          itemElement.innerHTML = `
+            <div class="admin-item-info">
+              <h4>${item.name[lang]} (${category.name[lang]})</h4>
+              <p>${item.desc[lang]}</p>
+              <div class="admin-item-price">${item.price} DA</div>
+            </div>
+            <div class="admin-item-actions">
+              <button class="delete-btn" onclick="deleteMenuItem('${category.id}', '${item.id}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          `;
+          itemsList.appendChild(itemElement);
+        });
+      });
+    }
+    
+    // Ajouter un nouveau plat
+    async function addMenuItem() {
+      const categoryId = document.getElementById('item-category').value;
+      const nameFr = document.getElementById('item-name-fr').value;
+      const nameAr = document.getElementById('item-name-ar').value;
+      const nameEn = document.getElementById('item-name-en').value;
+      const price = parseInt(document.getElementById('item-price').value);
+      const descFr = document.getElementById('item-desc-fr').value;
+      const descAr = document.getElementById('item-desc-ar').value;
+      const descEn = document.getElementById('item-desc-en').value;
+      const file = document.getElementById('item-image').files[0];
+      
+      // Validation
+      if (!nameFr || !nameAr || !nameEn || !price || !descFr || !descAr || !descEn) {
+        showNotification((lang === 'ar') ? 'يرجى ملء جميع الحقول المطلوبة!' : 
+              (lang === 'fr') ? 'Veuillez remplir tous les champs obligatoires!' : 'Please fill all required fields!', true);
+        return;
+      }
+      
+      if (price <= 0) {
+        showNotification((lang === 'ar') ? 'السعر يجب أن يكون أكبر من الصفر!' : 
+              (lang === 'fr') ? 'Le prix doit être supérieur à zéro!' : 'Price must be greater than zero!', true);
+        return;
+      }
+      
+      try {
+        let imgUrl = '';
+        
+        // Upload de l'image si elle est sélectionnée
+        if (file) {
+          showLoading(true);
+          const storageRef = storage.ref();
+          const fileRef = storageRef.child(`menu_images/${Date.now()}_${file.name}`);
+          await fileRef.put(file);
+          imgUrl = await fileRef.getDownloadURL();
+        } else {
+          // Image par défaut si aucune n'est fournie
+          imgUrl = 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80';
+        }
+        
+        // Créer le nouvel item
+        const newItem = {
+          name: { fr: nameFr, ar: nameAr, en: nameEn },
+          price: price,
+          desc: { fr: descFr, ar: descAr, en: descEn },
+          imgUrl: imgUrl
+        };
+        
+        // Ajouter à Firebase
+        await db.collection("categories").doc(categoryId).collection("items").add(newItem);
+        
+        // Recharger les données
+        await loadMenuData();
+        
+        // Afficher les items de la catégorie ajoutée
+        currentCategoryId = categoryId;
+        showItems(categoryId);
+        
+        // Afficher la notification
+        showNotification((lang === 'ar') ? 'تمت إضافة الطبق بنجاح!' : 
+              (lang === 'fr') ? 'Plat ajouté avec succès!' : 'Item added successfully!');
+        
+        // Réinitialiser le formulaire
+        document.getElementById('admin-form').reset();
+        
+      } catch (error) {
+        console.error("Erreur lors de l'ajout: ", error);
+        showNotification((lang === 'ar') ? 'خطأ في إضافة الطبق!' : 
+              (lang === 'fr') ? 'Erreur lors de l\'ajout du plat!' : 'Error adding item!', true);
+      } finally {
+        showLoading(false);
+      }
+    }
+    
+    // Supprimer un plat
+    async function deleteMenuItem(catId, itemId) {
+      if (!confirm((lang === 'ar') ? 'هل أنت متأكد من حذف هذا الطبق؟' : 
+                  (lang === 'fr') ? 'Êtes-vous sûr de vouloir supprimer ce plat?' : 'Are you sure you want to delete this item?')) {
+        return;
+      }
+      
+      try {
+        await db.collection("categories").doc(catId).collection("items").doc(itemId).delete();
+        await loadMenuData();
+        renderAdminItemsList();
+      } catch (error) {
+        console.error("Erreur lors de la suppression: ", error);
+        showNotification((lang === 'ar') ? 'خطأ في حذف الطبق!' : 
+              (lang === 'fr') ? 'Erreur lors de la suppression du plat!' : 'Error deleting item!', true);
+      }
+    }
+    
+    // Mettre à jour les textes selon la langue
+    function updateTextElements() {
+      document.getElementById('admin-text').textContent = (lang === 'ar') ? 'المدير' : 
+                                                        (lang === 'fr') ? 'Admin' : 'Admin';
+      
+      document.getElementById('return-menu-text').textContent = (lang === 'ar') ? 'العودة إلى القائمة' : 
+                                                              (lang === 'fr') ? 'Retour au menu' : 'Return to Menu';
+      
+      document.getElementById('admin-title').textContent = (lang === 'ar') ? 'الإدارة' : 
+                                                         (lang === 'fr') ? 'Administration' : 'Administration';
+      
+      document.getElementById('items-list-title').textContent = (lang === 'ar') ? 'قائمة الأطباق' : 
+                                                              (lang === 'fr') ? 'Liste des Plats' : 'Menu Items List';
+      
+      document.getElementById('add-item-btn').textContent = (lang === 'ar') ? 'إضافة طبق' : 
+                                                          (lang === 'fr') ? 'Ajouter Plat' : 'Add Item';
+      
+      document.getElementById('category-label').textContent = (lang === 'ar') ? 'الفئة' : 
+                                                           (lang === 'fr') ? 'Catégorie' : 'Category';
+      
+      document.getElementById('name-fr-label').textContent = (lang === 'ar') ? 'الاسم (بالفرنسية)' : 
+                                                          (lang === 'fr') ? 'Nom (FR)' : 'Name (FR)';
+      
+      document.getElementById('name-ar-label').textContent = (lang === 'ar') ? 'الاسم (بالعربية)' : 
+                                                          (lang === 'fr') ? 'Nom (AR)' : 'Name (AR)';
+      
+      document.getElementById('name-en-label').textContent = (lang === 'ar') ? 'الاسم (بالإنجليزية)' : 
+                                                          (lang === 'fr') ? 'Nom (EN)' : 'Name (EN)';
+      
+      document.getElementById('price-label').textContent = (lang === 'ar') ? 'السعر (دج)' : 
+                                                        (lang === 'fr') ? 'Prix (DA)' : 'Price (DA)';
+      
+      document.getElementById('desc-fr-label').textContent = (lang === 'ar') ? 'الوصف (بالفرنسية)' : 
+                                                          (lang === 'fr') ? 'Description (FR)' : 'Description (FR)';
+      
+      document.getElementById('desc-ar-label').textContent = (lang === 'ar') ? 'الوصف (بالعربية)' : 
+                                                          (lang === 'fr') ? 'Description (AR)' : 'Description (AR)';
+      
+      document.getElementById('desc-en-label').textContent = (lang === 'ar') ? 'الوصف (بالإنجليزية)' : 
+                                                          (lang === 'fr') ? 'Description (EN)' : 'Description (EN)';
+      
+      document.getElementById('image-label').textContent = (lang === 'ar') ? 'الصورة' : 
+                                                        (lang === 'fr') ? 'Image' : 'Image';
+      
+      document.getElementById('loading-text').textContent = (lang === 'ar') ? 'جاري التحميل...' : 
+                                                          (lang === 'fr') ? 'Chargement en cours...' : 'Loading...';
+    }
+  </script>
+</body>
+</html>
