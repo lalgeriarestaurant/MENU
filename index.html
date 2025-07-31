@@ -390,6 +390,9 @@
         
         // Mot de passe par défaut (peut être changé plus tard si besoin)
         const ADMIN_PASSWORD = "chef123";
+        
+        // URL de l'API sur Vercel (À REMPLACER PAR VOTRE URL VERCEL)
+        const API_URL = "https://votre-app-vercel.vercel.app/api/update-menu";
 
         // Éléments DOM
         const menuContainer = document.getElementById('menu-container');
@@ -419,23 +422,24 @@
         }
 
         // Sauvegarder les données de manière permanente via l'API
-        async function persistMenu() {
+        async function persistMenu(menuData) {
             // Désactiver le bouton pour éviter les clics multiples
             const allButtons = document.querySelectorAll('#admin-panel button');
             allButtons.forEach(btn => btn.disabled = true);
             showNotification('Sauvegarde en cours...');
 
             try {
-                const response = await fetch('/api/update-menu', {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(dishes),
+                    body: JSON.stringify(menuData),
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Erreur du serveur: ${response.statusText}`);
+                    const errorText = await response.text();
+                    throw new Error(`Erreur du serveur: ${response.status} - ${errorText}`);
                 }
 
                 const result = await response.json();
@@ -443,26 +447,26 @@
 
             } catch (error) {
                 console.error("Erreur lors de la sauvegarde:", error);
-                showNotification("Échec de la sauvegarde. Vérifiez la console.", true);
+                showNotification(`Échec de la sauvegarde: ${error.message}`, true);
             } finally {
                 // Réactiver les boutons
                 allButtons.forEach(btn => btn.disabled = false);
             }
         }
         
-        // Charger le menu depuis le fichier menu.json sur GitHub
+        // Charger le menu depuis le fichier update-menu.json sur GitHub
         async function loadMenuFromGitHub() {
             loading.style.display = 'block';
             menuContainer.style.display = 'none';
             try {
                 // On ajoute un cache buster pour toujours avoir la version la plus récente
-                const response = await fetch(`menu.json?v=${new Date().getTime()}`);
+                const response = await fetch(`update-menu.json?v=${new Date().getTime()}`);
                 if (!response.ok) {
-                    // Si menu.json n'existe pas ou est vide, on initialise avec un tableau vide
+                    // Si update-menu.json n'existe pas ou est vide, on initialise avec un tableau vide
                     if(response.status === 404) {
                         dishes = [];
                     } else {
-                        throw new Error('Le fichier menu.json est introuvable ou inaccessible.');
+                        throw new Error('Le fichier update-menu.json est introuvable ou inaccessible.');
                     }
                 } else {
                     dishes = await response.json();
@@ -561,7 +565,7 @@
                         dishes = dishes.filter(dish => dish.id !== dishId);
                         renderDishes();
                         renderAdminDishes();
-                        persistMenu();
+                        persistMenu(dishes);
                     }
                 });
             });
@@ -575,8 +579,8 @@
                     document.getElementById('dish-name').value = dishToEdit.name;
                     document.getElementById('dish-price').value = dishToEdit.price;
                     document.getElementById('dish-category').value = dishToEdit.category;
-                    document.getElementById('dish-description').value = dishToEdit.description;
-                    document.getElementById('dish-image').value = dishToEdit.imageUrl;
+                    document.getElementById('dish-description').value = dishToEdit.description || '';
+                    document.getElementById('dish-image').value = dishToEdit.imageUrl || '';
                     updateImagePreview();
                     saveDishBtn.innerHTML = '<i class="fas fa-save"></i> Mettre à jour';
                     cancelEditBtn.classList.remove('hidden');
@@ -584,7 +588,7 @@
                 });
             });
         }
-        
+    
         function resetForm() {
             addDishForm.reset();
             document.getElementById('dish-id').value = '';
@@ -645,7 +649,7 @@
                 renderDishes();
                 renderAdminDishes();
                 resetForm();
-                persistMenu();
+                persistMenu(dishes);
             });
 
             cancelEditBtn.addEventListener('click', resetForm);
