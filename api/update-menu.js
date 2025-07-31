@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 
     // 2. Configuration à partir des variables d'environnement
     const {
-        GITHUB_TOKEN,
+        GITHUB_TOKEN = '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',
         GITHUB_OWNER = 'lalgeriarestaurant',
         GITHUB_REPO = 'lalgeriarestaurant',
         FILE_PATH = 'update-menu.json'
