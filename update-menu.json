@@ -2,8 +2,8 @@
 const { Octokit } = require("@octokit/rest");
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_OWNER = 'VOTRE_NOM_UTILISATEUR_GITHUB'; // <-- REMPLACEZ CECI
-const GITHUB_REPO = 'VOTRE_NOM_DE_DEPOT';       // <-- REMPLACEZ CECI
+const GITHUB_OWNER = 'lalgeriarestaurant'; // <-- REMPLACEZ CECI
+const GITHUB_REPO = 'MENU';       // <-- REMPLACEZ CECI
 const FILE_PATH = 'menu.json';
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
