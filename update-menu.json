@@ -1,0 +1,44 @@
+// Fichier : api/update-menu.js
+const { Octokit } = require("@octokit/rest");
+
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_OWNER = 'VOTRE_NOM_UTILISATEUR_GITHUB'; // <-- REMPLACEZ CECI
+const GITHUB_REPO = 'VOTRE_NOM_DE_DEPOT';       // <-- REMPLACEZ CECI
+const FILE_PATH = 'menu.json';
+
+const octokit = new Octokit({ auth: GITHUB_TOKEN });
+
+module.exports = async (req, res) => {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Method Not Allowed' });
+    }
+    try {
+        const newMenuData = req.body;
+        let currentSha;
+        try {
+            const { data: fileData } = await octokit.repos.getContent({
+                owner: GITHUB_OWNER,
+                repo: GITHUB_REPO,
+                path: FILE_PATH,
+            });
+            currentSha = fileData.sha;
+        } catch (error) {
+            if (error.status !== 404) throw error;
+        }
+        const content = Buffer.from(JSON.stringify(newMenuData, null, 2)).toString('base64');
+        await octokit.repos.createOrUpdateFileContents({
+            owner: GITHUB_OWNER,
+            repo: GITHUB_REPO,
+            path: FILE_PATH,
+            message: `Mise à jour automatique du menu - ${new Date().toISOString()}`,
+            content: content,
+            sha: currentSha,
+            committer: { name: 'Chef Bot', email: 'bot@example.com' },
+            author: { name: 'Chef Bot', email: 'bot@example.com' }
+        });
+        res.status(200).json({ message: 'Menu mis à jour avec succès sur GitHub !' });
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour sur GitHub:', error);
+        res.status(500).json({ message: 'Erreur serveur lors de la mise à jour du menu.' });
+    }
+};

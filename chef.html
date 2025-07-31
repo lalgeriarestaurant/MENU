@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Restaurant - Solution Automatisée</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8b0000;
+            --secondary: #228B22;
+            --light: #f8f5f0;
+            --dark: #333;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), #a52a2a);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--primary);
+            margin: 10px auto;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .dish-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .dish-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .dish-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .dish-image-placeholder {
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 0.9rem;
+            height: 100%;
+        }
+        
+        .dish-info {
+            padding: 1.5rem;
+        }
+        
+        .dish-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .dish-price {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .dish-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        
+        .admin-panel {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 3rem;
+        }
+        
+        .admin-controls {
+            background-color: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: #a52a2a;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2E8B57;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .password-prompt {
+            text-align: center;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background-color: #dc3545;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+        }
+        
+        .image-preview.has-image {
+            border: none;
+        }
+        
+        .automation-info {
+            background-color: #e9f7ef;
+            border-left: 4px solid var(--secondary);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .automation-info h3 {
+            color: #155724;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .admin-panel {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-utensils"></i> Le Bistro Français</h1>
+        <p>Savourez les délices de la cuisine française</p>
+    </header>
+    
+    <div class="container">
+        <div class="automation-info">
+            <h3><i class="fas fa-magic"></i> Gestion Automatisée</h3>
+            <p>Toutes les modifications faites dans le panneau chef sont <strong>automatiquement et définitivement sauvegardées</strong>. Plus besoin de copier/coller !</p>
+        </div>
+        
+        <h2 class="section-title">Notre Menu</h2>
+        
+        <div id="loading" class="loader"></div>
+        
+        <div id="menu-container" class="menu-grid" style="display: none;">
+            <!-- Les plats seront chargés ici dynamiquement -->
+        </div>
+        
+        <div id="admin-access" class="password-prompt">
+            <h3><i class="fas fa-lock"></i> Accès Chef</h3>
+            <div class="form-group">
+                <input type="password" id="admin-password" placeholder="Entrez le mot de passe chef" value="chef123">
+            </div>
+            <button id="login-btn"><i class="fas fa-sign-in-alt"></i> Accéder au panneau chef</button>
+        </div>
+        
+        <div id="admin-panel" class="admin-panel hidden">
+            <h2 class="section-title"><i class="fas fa-user-shield"></i> Panneau Chef</h2>
+            
+            <div class="admin-controls">
+                <h3><i class="fas fa-plus-circle"></i> Ajouter ou Modifier un plat</h3>
+                <form id="add-dish-form">
+                    <input type="hidden" id="dish-id">
+                    <div class="form-group">
+                        <label for="dish-name">Nom du plat</label>
+                        <input type="text" id="dish-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dish-price">Prix (€)</label>
+                        <input type="number" id="dish-price" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dish-category">Catégorie</label>
+                        <select id="dish-category" required>
+                            <option value="entrées">Entrées</option>
+                            <option value="plats">Plats Principaux</option>
+                            <option value="desserts">Desserts</option>
+                            <option value="boissons">Boissons</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dish-description">Description</label>
+                        <textarea id="dish-description" rows="3" placeholder="Ingrédients principaux..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="dish-image">URL de l'image (optionnel)</label>
+                        <input type="text" id="dish-image" placeholder="https://... image du plat">
+                        <div id="image-preview" class="image-preview">
+                            <span>Aperçu de l'image</span>
+                        </div>
+                    </div>
+                    <button type="submit" id="save-dish-btn"><i class="fas fa-save"></i> Enregistrer le plat</button>
+                    <button type="button" id="cancel-edit-btn" class="hidden" style="background-color: var(--gray);"><i class="fas fa-times"></i> Annuler</button>
+                </form>
+            </div>
+            
+            <div>
+                <h3><i class="fas fa-list"></i> Plats existants</h3>
+                <div id="admin-dishes-container">
+                    <!-- Liste des plats pour l'administration -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Opération réussie!</span>
+    </div>
+
+    <script>
+        // Variable globale pour stocker les plats
+        let dishes = [];
+        
+        // Mot de passe par défaut (peut être changé plus tard si besoin)
+        const ADMIN_PASSWORD = "chef123";
+
+        // Éléments DOM
+        const menuContainer = document.getElementById('menu-container');
+        const adminAccess = document.getElementById('admin-access');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginBtn = document.getElementById('login-btn');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const addDishForm = document.getElementById('add-dish-form');
+        const dishImageInput = document.getElementById('dish-image');
+        const imagePreview = document.getElementById('image-preview');
+        const adminDishesContainer = document.getElementById('admin-dishes-container');
+        const notification = document.getElementById('notification');
+        const loading = document.getElementById('loading');
+        const saveDishBtn = document.getElementById('save-dish-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        
+        // Afficher une notification
+        function showNotification(message, isError = false) {
+            const icon = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            notification.innerHTML = `<i class="${icon}"></i><span>${message}</span>`;
+            notification.className = 'notification show';
+            if (isError) notification.classList.add('error');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Sauvegarder les données de manière permanente via l'API
+        async function persistMenu() {
+            // Désactiver le bouton pour éviter les clics multiples
+            const allButtons = document.querySelectorAll('#admin-panel button');
+            allButtons.forEach(btn => btn.disabled = true);
+            showNotification('Sauvegarde en cours...');
+
+            try {
+                const response = await fetch('/api/update-menu', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dishes),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur du serveur: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                showNotification(result.message || 'Menu sauvegardé avec succès !');
+
+            } catch (error) {
+                console.error("Erreur lors de la sauvegarde:", error);
+                showNotification("Échec de la sauvegarde. Vérifiez la console.", true);
+            } finally {
+                // Réactiver les boutons
+                allButtons.forEach(btn => btn.disabled = false);
+            }
+        }
+        
+        // Charger le menu depuis le fichier menu.json sur GitHub
+        async function loadMenuFromGitHub() {
+            loading.style.display = 'block';
+            menuContainer.style.display = 'none';
+            try {
+                // On ajoute un cache buster pour toujours avoir la version la plus récente
+                const response = await fetch(`menu.json?v=${new Date().getTime()}`);
+                if (!response.ok) {
+                    // Si menu.json n'existe pas ou est vide, on initialise avec un tableau vide
+                    if(response.status === 404) {
+                        dishes = [];
+                    } else {
+                        throw new Error('Le fichier menu.json est introuvable ou inaccessible.');
+                    }
+                } else {
+                    dishes = await response.json();
+                }
+                renderDishes();
+                if (adminPanel.classList.contains('hidden') === false) {
+                    renderAdminDishes();
+                }
+            } catch (error) {
+                console.error(error);
+                showNotification(error.message, true);
+                dishes = []; // En cas d'erreur, on part d'un menu vide
+            } finally {
+                loading.style.display = 'none';
+                menuContainer.style.display = 'grid';
+            }
+        }
+        
+        // Afficher les plats dans le menu public
+        function renderDishes() {
+            menuContainer.innerHTML = '';
+            const categories = { 'entrées': [], 'plats': [], 'desserts': [], 'boissons': [] };
+            
+            dishes.forEach(dish => {
+                if (categories[dish.category]) {
+                    categories[dish.category].push(dish);
+                }
+            });
+
+            if (dishes.length === 0) {
+                menuContainer.innerHTML = '<p style="text-align: center;">Le menu est en cours de préparation. Revenez bientôt !</p>';
+                return;
+            }
+            
+            for (const [categoryName, categoryDishes] of Object.entries(categories)) {
+                if(categoryDishes.length === 0) continue;
+
+                const categoryElement = document.createElement('div');
+                categoryElement.innerHTML = `<h3 class="section-title">${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)}</h3>`;
+                
+                const dishesGrid = document.createElement('div');
+                dishesGrid.className = 'menu-grid';
+                
+                categoryDishes.forEach(dish => {
+                    const dishElement = document.createElement('div');
+                    dishElement.className = 'dish-card';
+                    let imageContent = dish.imageUrl ? 
+                        `<div class="dish-image" style="background-image: url('${dish.imageUrl}')"></div>` : 
+                        `<div class="dish-image"><div class="dish-image-placeholder"><i class="fas fa-camera fa-2x"></i></div></div>`;
+                    
+                    dishElement.innerHTML = `
+                        ${imageContent}
+                        <div class="dish-info">
+                            <h3 class="dish-title">${dish.name}</h3>
+                            <p class="dish-price">${dish.price.toFixed(2)} €</p>
+                            ${dish.description ? `<p class="dish-description">${dish.description}</p>` : ''}
+                        </div>`;
+                    dishesGrid.appendChild(dishElement);
+                });
+                
+                categoryElement.appendChild(dishesGrid);
+                menuContainer.appendChild(categoryElement);
+            }
+        }
+        
+        // Afficher les plats dans le panneau d'administration
+        function renderAdminDishes() {
+            adminDishesContainer.innerHTML = '';
+            
+            if (dishes.length === 0) {
+                adminDishesContainer.innerHTML = '<p>Aucun plat dans le menu. Ajoutez-en un !</p>';
+                return;
+            }
+            
+            dishes.forEach(dish => {
+                const dishElement = document.createElement('div');
+                dishElement.className = 'dish-card';
+                dishElement.innerHTML = `
+                    <div class="dish-info">
+                        <h3 class="dish-title">${dish.name}</h3>
+                        <p class="dish-price">${dish.price.toFixed(2)} €</p>
+                        <p><strong>Catégorie:</strong> ${dish.category}</p>
+                        <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                            <button class="edit-dish-btn" data-id="${dish.id}"><i class="fas fa-edit"></i> Modifier</button>
+                            <button class="delete-dish-btn" data-id="${dish.id}"><i class="fas fa-trash-alt"></i> Supprimer</button>
+                        </div>
+                    </div>`;
+                adminDishesContainer.appendChild(dishElement);
+            });
+            
+            // Écouteurs pour les boutons de suppression
+            document.querySelectorAll('.delete-dish-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const dishId = btn.dataset.id;
+                    if (confirm(`Êtes-vous sûr de vouloir supprimer ce plat ?`)) {
+                        dishes = dishes.filter(dish => dish.id !== dishId);
+                        renderDishes();
+                        renderAdminDishes();
+                        persistMenu();
+                    }
+                });
+            });
+
+            // Écouteurs pour les boutons de modification
+            document.querySelectorAll('.edit-dish-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const dishId = btn.dataset.id;
+                    const dishToEdit = dishes.find(d => d.id === dishId);
+                    document.getElementById('dish-id').value = dishToEdit.id;
+                    document.getElementById('dish-name').value = dishToEdit.name;
+                    document.getElementById('dish-price').value = dishToEdit.price;
+                    document.getElementById('dish-category').value = dishToEdit.category;
+                    document.getElementById('dish-description').value = dishToEdit.description;
+                    document.getElementById('dish-image').value = dishToEdit.imageUrl;
+                    updateImagePreview();
+                    saveDishBtn.innerHTML = '<i class="fas fa-save"></i> Mettre à jour';
+                    cancelEditBtn.classList.remove('hidden');
+                    window.scrollTo(0, adminPanel.offsetTop);
+                });
+            });
+        }
+        
+        function resetForm() {
+            addDishForm.reset();
+            document.getElementById('dish-id').value = '';
+            updateImagePreview();
+            saveDishBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer le plat';
+            cancelEditBtn.classList.add('hidden');
+        }
+
+        // Afficher l'aperçu de l'image
+        function updateImagePreview() {
+            const imageUrl = dishImageInput.value;
+            if (imageUrl) {
+                imagePreview.style.backgroundImage = `url('${imageUrl}')`;
+                imagePreview.innerHTML = '';
+                imagePreview.classList.add('has-image');
+            } else {
+                imagePreview.style.backgroundImage = '';
+                imagePreview.innerHTML = '<span>Aperçu de l\'image</span>';
+                imagePreview.classList.remove('has-image');
+            }
+        }
+        
+        // Initialisation de l'application
+        function initApp() {
+            loadMenuFromGitHub();
+            
+            loginBtn.addEventListener('click', () => {
+                if (adminPasswordInput.value === ADMIN_PASSWORD) {
+                    adminAccess.classList.add('hidden');
+                    adminPanel.classList.remove('hidden');
+                    renderAdminDishes();
+                    showNotification('Connexion réussie ! Bienvenue Chef !');
+                } else {
+                    showNotification('Mot de passe incorrect', true);
+                }
+            });
+            
+            addDishForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const dishId = document.getElementById('dish-id').value;
+                
+                const dishData = {
+                    id: dishId || Date.now().toString(),
+                    name: document.getElementById('dish-name').value,
+                    price: parseFloat(document.getElementById('dish-price').value),
+                    category: document.getElementById('dish-category').value,
+                    description: document.getElementById('dish-description').value,
+                    imageUrl: dishImageInput.value
+                };
+
+                if (dishId) { // Modification
+                    const index = dishes.findIndex(d => d.id === dishId);
+                    dishes[index] = dishData;
+                } else { // Ajout
+                    dishes.push(dishData);
+                }
+                
+                renderDishes();
+                renderAdminDishes();
+                resetForm();
+                persistMenu();
+            });
+
+            cancelEditBtn.addEventListener('click', resetForm);
+            dishImageInput.addEventListener('input', updateImagePreview);
+        }
+        
+        // Démarrer l'application
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
